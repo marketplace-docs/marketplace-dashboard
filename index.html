@@ -44,13 +44,13 @@
 </head>
 <body class="bg-gray-100 p-4 overflow-y-auto transition-colors duration-300">
 
-  <div id="app" class="w-full space-y-8 max-w-7xl mx-auto">
+  <div id="app" class="w-full space-y-8 max-w-full mx-auto">
     
     <!-- Header Dashboard -->
     <header class="flex items-center justify-between p-6 bg-white rounded-2xl shadow-lg transition-colors duration-300">
       <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard text-indigo-600"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
-        Marketplace Report
+        Marketplace Report Progress
       </h1>
       <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-300">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon dark:text-yellow-400 text-gray-800"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
@@ -58,20 +58,27 @@
     </header>
 
     <!-- Bagian Metrik Ringkasan -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4" id="summary-metrics">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-4" id="summary-metrics">
       <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium opacity-80">Total Pick Order</p>
+          <p class="text-sm font-medium opacity-80">TOTAL PICK ORDERS</p>
           <p class="text-3xl font-semibold mt-1" id="total-pick-order">0</p>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-boxes opacity-30"><path d="M2.97 10.18a2 2 0 0 0-.2 3.63L9 16.5a2 2 0 0 0 2-.36l5.54-3.84a2 2 0 0 0 .19-3.59L9.13 7.63a2 2 0 0 0-2.08.33l-4.08 2.22Z"/><path d="M2.97 10.18a2 2 0 0 1 .19-3.59L9.13 3.5a2 2 0 0 1 2.08-.33l4.08 2.22a2 2 0 0 1 .19 3.59L9.13 12.5a2 2 0 0 1-2.08.33l-4.08-2.22Z"/><path d="M11.07 13.52a2 2 0 0 1 2.08-.33l4.08 2.22a2 2 0 0 1 .2 3.63l-5.83 2.7a2 2 0 0 1-2-.36l-5.54-3.84a2 2 0 0 1-.19-3.59l5.83-2.7Z"/></svg>
       </div>
       <div class="bg-gradient-to-r from-teal-500 to-emerald-600 text-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium opacity-80">Total Packed</p>
+          <p class="text-sm font-medium opacity-80">TOTAL PACKED ORDER</p>
           <p class="text-3xl font-semibold mt-1" id="total-packed-orders">0</p>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-check opacity-30"><path d="M16 11V5.5L8.5 2H2v13.5L8.5 18H15v-7"/><path d="M16 11h6v8a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z"/><path d="m20 12 2 2.5"/><path d="m22 12-2 2.5"/></svg>
+      </div>
+      <div class="bg-gradient-to-r from-yellow-500 to-orange-600 text-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium opacity-80">TOTAL SHIPPED ORDER</p>
+          <p class="text-3xl font-semibold mt-1" id="total-shipped-orders">0</p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send-horizonal opacity-30"><path d="m3 3 3 9-3 9 19-9-19-9Z"/><path d="M6 12h16"/></svg>
       </div>
       <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
         <div>
@@ -142,6 +149,13 @@
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock text-red-500 opacity-60"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
+        <div id="card-average-shipped" class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between col-span-1">
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Rata-rata Shipped/Jam</p>
+                <p class="text-2xl font-semibold mt-1 text-gray-800" id="average-shipped-per-hour">0</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-truck text-orange-500 opacity-60"><path d="M10 17H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h4l2 3h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4v4h-6v-4z"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg>
+        </div>
       </div>
     </div>
     
@@ -187,25 +201,53 @@
           <div id="pack-input-container" class="flex space-x-2 min-w-[1200px]">
             <!-- Input fields akan digenerate oleh JavaScript -->
           </div>
-        </div>
-        <div class="mt-8 h-80">
-          <h3 class="text-lg font-medium text-gray-800 mb-4">Grafik Total Packed</h3>
-          <canvas id="pack-chart"></canvas>
+          <div class="mt-8 h-80">
+            <h3 class="text-lg font-medium text-gray-800 mb-4">Grafik Total Packed</h3>
+            <canvas id="pack-chart"></canvas>
+          </div>
         </div>
       </div>
     </div>
-    
+
+    <!-- Bagian Input dan Grafik Shipped -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300">
+      <div class="flex justify-between items-center mb-4 cursor-pointer" id="shipped-header">
+        <h2 class="text-xl font-semibold text-gray-800">Summary Total Shipped</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down shipped-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div id="shipped-content">
+        <div class="flex items-center space-x-2 mb-4">
+          <label for="shipped-start-hour" class="text-sm font-medium text-gray-700">From:</label>
+          <input type="number" id="shipped-start-hour" value="0" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
+          <label for="shipped-end-hour" class="text-sm font-medium text-gray-700">To:</label>
+          <input type="number" id="shipped-end-hour" value="24" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
+        </div>
+        <div class="overflow-x-auto pb-4">
+          <div id="shipped-input-container" class="flex space-x-2 min-w-[1200px]">
+            <!-- Input fields akan digenerasi oleh JavaScript -->
+          </div>
+        </div>
+        <div class="mt-8 h-80">
+          <h3 class="text-lg font-medium text-gray-800 mb-4">Grafik Total Shipped</h3>
+          <canvas id="shipped-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
     // Inisialisasi state awal
     let pickData = [];
     let packData = [];
+    let shippedData = [];
     let originalPickData = [];
     let originalPackData = [];
+    let originalShippedData = [];
     let summary = {};
     let pickChartInstance;
     let packChartInstance;
+    let shippedChartInstance;
 
     // Fungsi untuk membuat array jam dari 00:00 sampai 24:00
     const generateHours = () => {
@@ -223,12 +265,14 @@
     const updateSummary = () => {
         const totalPickOrder = pickData.reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0);
         const totalPackOrder = packData.reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0);
+        const totalShippedOrder = shippedData.reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0);
         const paymentOrders = parseInt(document.getElementById('payment-input').value, 10) || 0;
         const pickerCount = parseInt(document.getElementById('picker-input').value, 10) || 0;
         const packerCount = parseInt(document.getElementById('packer-input').value, 10) || 0;
 
         const nonZeroPickValues = pickData.filter(v => v > 0);
         const nonZeroPackValues = packData.filter(v => v > 0);
+        const nonZeroShippedValues = shippedData.filter(v => v > 0);
 
         // Perhitungan rata-rata per jam
         const averagePickPerHour = nonZeroPickValues.length > 0
@@ -238,16 +282,21 @@
         const averagePackPerHour = nonZeroPackValues.length > 0
             ? Math.round(totalPackOrder / nonZeroPackValues.length)
             : '0';
+        
+        const averageShippedPerHour = nonZeroShippedValues.length > 0
+            ? Math.round(totalShippedOrder / nonZeroShippedValues.length)
+            : '0';
 
-        const totalPacked = totalPackOrder;
-        const inProgressOrders = totalPickOrder - totalPacked;
+
+        const inProgressOrders = totalPickOrder - totalPackOrder;
         const backlogOrders = inProgressOrders + paymentOrders;
         
-        // Logika Performance Shift
+        // Logika Performance
         const shift1Hours = 8;
         const targetOrdersPerHour = 800;
         const totalOrdersInShift1 = originalPickData.slice(0, shift1Hours).reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0) +
-                                    originalPackData.slice(0, shift1Hours).reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0);
+                                    originalPackData.slice(0, shift1Hours).reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0) +
+                                    originalShippedData.slice(0, shift1Hours).reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0);
         
         const targetOrdersPerShift = targetOrdersPerHour * shift1Hours;
         let performancePercentage = (totalOrdersInShift1 / targetOrdersPerShift) * 100;
@@ -266,25 +315,29 @@
 
         summary = {
             totalPickOrder,
-            totalPacked,
+            totalPacked: totalPackOrder,
+            totalShipped: totalShippedOrder,
             payment: paymentOrders,
             inProgress: inProgressOrders,
             averagePickPerHour,
             averagePackPerHour,
+            averageShippedPerHour,
             backlog: backlogOrders,
             pickerCount,
             packerCount,
-            performanceShift1: performancePercentage,
+            performance: performancePercentage,
         };
 
         // Render nilai-nilai baru ke DOM
         document.getElementById('total-pick-order').innerText = summary.totalPickOrder;
         document.getElementById('total-packed-orders').innerText = summary.totalPacked;
+        document.getElementById('total-shipped-orders').innerText = summary.totalShipped;
         document.getElementById('in-progress-orders').innerText = summary.inProgress;
+        document.getElementById('backlog-orders').innerText = summary.backlog;
         document.getElementById('average-pick-per-hour').innerText = `${summary.averagePickPerHour}`;
         document.getElementById('average-pack-per-hour').innerText = `${summary.averagePackPerHour}`;
-        document.getElementById('backlog-orders').innerText = summary.backlog;
-        document.getElementById('performance-percentage').innerText = `${summary.performanceShift1}%`;
+        document.getElementById('average-shipped-per-hour').innerText = `${summary.averageShippedPerHour}`;
+        document.getElementById('performance-percentage').innerText = `${summary.performance}%`;
     };
 
     // Fungsi untuk merender grafik
@@ -292,7 +345,7 @@
         // Register plugin for datalabels
         Chart.register(ChartDataLabels);
 
-        // Mempersiapkan data untuk grafik berdasarkan filter
+        // Mempersiapkan data untuk grafik Pick Lead Time
         const pickContent = document.getElementById('pick-content');
         let startPickHour = 0;
         let endPickHour = 24;
@@ -338,6 +391,7 @@
             }
         });
         
+        // Mempersiapkan data untuk grafik Pack Lead Time
         const packContent = document.getElementById('pack-content');
         let startPackHour = 0;
         let endPackHour = 24;
@@ -382,6 +436,52 @@
                 }
             }
         });
+
+        // Mempersiapkan data untuk grafik Shipped
+        const shippedContent = document.getElementById('shipped-content');
+        let startShippedHour = 0;
+        let endShippedHour = 24;
+
+        if (shippedContent && !shippedContent.classList.contains('hidden')) {
+            startShippedHour = parseInt(document.getElementById('shipped-start-hour').value, 10);
+            endShippedHour = parseInt(document.getElementById('shipped-end-hour').value, 10);
+        }
+        
+        const filteredShippedHours = hours.slice(startShippedHour, endShippedHour + 1);
+        const filteredShippedData = originalShippedData.slice(startShippedHour, endShippedHour + 1);
+        
+        if (shippedChartInstance) shippedChartInstance.destroy();
+        shippedChartInstance = new Chart(document.getElementById('shipped-chart'), {
+            type: 'bar',
+            data: {
+                labels: filteredShippedHours,
+                datasets: [{
+                    label: 'Jumlah Order Shipped',
+                    data: filteredShippedData,
+                    backgroundColor: '#10b981',
+                    borderRadius: 10,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: (value) => value > 0 ? value : '', // Hanya tampilkan jika nilai > 0
+                        color: '#4A5568',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        });
     };
 
     // Fungsi utama yang mengupdate dashboard
@@ -394,6 +494,7 @@
     const createInputFields = () => {
         const pickInputContainer = document.getElementById('pick-input-container');
         const packInputContainer = document.getElementById('pack-input-container');
+        const shippedInputContainer = document.getElementById('shipped-input-container');
 
         hours.forEach((hour, index) => {
             // Input untuk Pick Lead Time
@@ -403,7 +504,7 @@
                 <label class="block text-sm font-medium text-gray-500">${hour}</label>
                 <input type="number" data-index="${index}" class="pick-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-center" value="0" min="0">
             `;
-            pickInputContainer.appendChild(pickInputDiv);
+            if (pickInputContainer) pickInputContainer.appendChild(pickInputDiv);
 
             // Input untuk Pack Lead Time
             const packInputDiv = document.createElement('div');
@@ -412,26 +513,49 @@
                 <label class="block text-sm font-medium text-gray-500">${hour}</label>
                 <input type="number" data-index="${index}" class="pack-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-center" value="0" min="0">
             `;
-            packInputContainer.appendChild(packInputDiv);
+            if (packInputContainer) packInputContainer.appendChild(packInputDiv);
+
+            // Input untuk Shipped
+            const shippedInputDiv = document.createElement('div');
+            shippedInputDiv.className = 'flex-none w-24 text-center';
+            shippedInputDiv.innerHTML = `
+                <label class="block text-sm font-medium text-gray-500">${hour}</label>
+                <input type="number" data-index="${index}" class="shipped-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-center" value="0" min="0">
+            `;
+            if (shippedInputContainer) shippedInputContainer.appendChild(shippedInputDiv);
         });
 
         // Tambahkan event listeners ke input fields
-        pickInputContainer.querySelectorAll('.pick-input').forEach(input => {
-            input.addEventListener('input', (e) => {
-                const index = e.target.dataset.index;
-                originalPickData[index] = parseInt(e.target.value, 10) || 0;
-                pickData = [...originalPickData];
-                updateDashboard();
-            });
-        });
-        packInputContainer.querySelectorAll('.pack-input').forEach(input => {
-            input.addEventListener('input', (e) => {
-                const index = e.target.dataset.index;
-                originalPackData[index] = parseInt(e.target.value, 10) || 0;
-                packData = [...originalPackData];
-                updateDashboard();
-            });
-        });
+        if (pickInputContainer) {
+          pickInputContainer.querySelectorAll('.pick-input').forEach(input => {
+              input.addEventListener('input', (e) => {
+                  const index = e.target.dataset.index;
+                  originalPickData[index] = parseInt(e.target.value, 10) || 0;
+                  pickData = [...originalPickData];
+                  updateDashboard();
+              });
+          });
+        }
+        if (packInputContainer) {
+          packInputContainer.querySelectorAll('.pack-input').forEach(input => {
+              input.addEventListener('input', (e) => {
+                  const index = e.target.dataset.index;
+                  originalPackData[index] = parseInt(e.target.value, 10) || 0;
+                  packData = [...originalPackData];
+                  updateDashboard();
+              });
+          });
+        }
+        if (shippedInputContainer) {
+          shippedInputContainer.querySelectorAll('.shipped-input').forEach(input => {
+              input.addEventListener('input', (e) => {
+                  const index = e.target.dataset.index;
+                  originalShippedData[index] = parseInt(e.target.value, 10) || 0;
+                  shippedData = [...originalShippedData];
+                  updateDashboard();
+              });
+          });
+        }
     };
 
     // Jalankan inisialisasi saat halaman dimuat
@@ -446,8 +570,10 @@
         // Inisialisasi data dengan 0
         originalPickData = hours.map(() => 0);
         originalPackData = hours.map(() => 0);
+        originalShippedData = hours.map(() => 0);
         pickData = [...originalPickData];
         packData = [...originalPackData];
+        shippedData = [...originalShippedData];
         
         createInputFields();
         updateDashboard();
@@ -482,11 +608,33 @@
           }
         });
 
+        const shippedHeader = document.getElementById('shipped-header');
+        const shippedIcon = shippedHeader.querySelector('.shipped-header-icon');
+        const shippedContent = document.getElementById('shipped-content');
+        if (shippedHeader) {
+          shippedHeader.addEventListener('click', () => {
+            const isHidden = shippedContent.classList.toggle('hidden');
+            if (shippedIcon) {
+              if (isHidden) {
+                shippedIcon.classList.add('rotate-180');
+              } else {
+                shippedIcon.classList.remove('rotate-180');
+              }
+            }
+          });
+        }
+
         // Event listener for filter inputs to update charts dynamically
         document.getElementById('pick-start-hour').addEventListener('input', updateDashboard);
         document.getElementById('pick-end-hour').addEventListener('input', updateDashboard);
         document.getElementById('pack-start-hour').addEventListener('input', updateDashboard);
         document.getElementById('pack-end-hour').addEventListener('input', updateDashboard);
+        
+        // Check for shipped input elements before adding listeners
+        const shippedStartHourInput = document.getElementById('shipped-start-hour');
+        const shippedEndHourInput = document.getElementById('shipped-end-hour');
+        if (shippedStartHourInput) shippedStartHourInput.addEventListener('input', updateDashboard);
+        if (shippedEndHourInput) shippedEndHourInput.addEventListener('input', updateDashboard);
 
         // Tambahkan event listener untuk tombol toggle tema
         document.getElementById('theme-toggle').addEventListener('click', () => {
