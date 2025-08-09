@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace Report Hours Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js Datalabels Plugin CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <!-- Lucide Icons (Inline SVG) -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    body.dark {
+      background-color: #121212;
+    }
+    .dark .bg-white {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+    .dark .text-gray-800 {
+      color: #e0e0e0;
+    }
+    .dark .text-gray-500 {
+      color: #b0b0b0;
+    }
+    .dark input {
+      background-color: #333;
+      color: #e0e0e0;
+      border-color: #555;
+    }
+    .dark .shadow-lg {
+      box-shadow: 0 10px 15px -3px rgba(255,255,255,0.05), 0 4px 6px -2px rgba(255,255,255,0.05);
+    }
+    .rotate-180 {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-4 overflow-y-auto transition-colors duration-300">
+
+  <div id="app" class="w-full space-y-8 max-w-7xl mx-auto">
+    
+    <!-- Header Dashboard -->
+    <header class="flex items-center justify-between p-6 bg-white rounded-2xl shadow-lg transition-colors duration-300">
+      <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard text-indigo-600"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+        Marketplace Report Progress
+      </h1>
+      <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon dark:text-yellow-400 text-gray-800"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </header>
+
+    <!-- Bagian Metrik Ringkasan -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4" id="summary-metrics">
+      <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium opacity-80">Total Pick Order</p>
+          <p class="text-3xl font-semibold mt-1" id="total-pick-order">0</p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-boxes opacity-30"><path d="M2.97 10.18a2 2 0 0 0-.2 3.63L9 16.5a2 2 0 0 0 2-.36l5.54-3.84a2 2 0 0 0 .19-3.59L9.13 7.63a2 2 0 0 0-2.08.33l-4.08 2.22Z"/><path d="M2.97 10.18a2 2 0 0 1 .19-3.59L9.13 3.5a2 2 0 0 1 2.08-.33l4.08 2.22a2 2 0 0 1 .19 3.59L9.13 12.5a2 2 0 0 1-2.08.33l-4.08-2.22Z"/><path d="M11.07 13.52a2 2 0 0 1 2.08-.33l4.08 2.22a2 2 0 0 1 .2 3.63l-5.83 2.7a2 2 0 0 1-2-.36l-5.54-3.84a2 2 0 0 1-.19-3.59l5.83-2.7Z"/></svg>
+      </div>
+      <div class="bg-gradient-to-r from-teal-500 to-emerald-600 text-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium opacity-80">Total Packed</p>
+          <p class="text-3xl font-semibold mt-1" id="total-packed-orders">0</p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-check opacity-30"><path d="M16 11V5.5L8.5 2H2v13.5L8.5 18H15v-7"/><path d="M16 11h6v8a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z"/><path d="m20 12 2 2.5"/><path d="m22 12-2 2.5"/></svg>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 font-medium">Payment Accepted</p>
+          <input type="number" id="payment-input" value="250" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 text-center text-3xl font-semibold text-gray-800 transition-colors duration-300" min="0">
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-coins text-amber-500 opacity-60"><path d="M9.9 14.24a3 3 0 0 0 4.2 0l2.82-2.82a3 3 0 0 0 0-4.2l-.28-.28a3 3 0 0 0-4.2 0l-2.82 2.82a3 3 0 0 0 0 4.2z"/><path d="M15.42 16.58a3 3 0 0 0-4.2 0l-2.82 2.82a3 3 0 0 0 0 4.2l.28.28a3 3 0 0 0 4.2 0l2.82-2.82a3 3 0 0 0 0-4.2z"/><path d="M9 10a5 5 0 0 0 0-10H5a5 5 0 0 0 0 10h4z"/><path d="M19 14a5 5 0 0 0 0-10h-4a5 5 0 0 0 0 10h4z"/></svg>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 font-medium">In Progress</p>
+          <p class="text-3xl font-semibold mt-1" id="in-progress-orders">0</p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hourglass text-blue-500 opacity-60"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414-4.414A2 2 0 0 0 7 6.172V2"/><path d="M7 22v-4.172a2 2 0 0 1 .586-1.414L12 12l4.414-4.414A2 2 0 0 1 17 6.172V2"/></svg>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 font-medium">Summary Backlog</p>
+          <p class="text-3xl font-semibold mt-1" id="backlog-orders">0</p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-truck text-orange-500 opacity-60"><path d="M10 17H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h4l2 3h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4v4h-6v-4z"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg>
+      </div>
+    </div>
+    
+    <!-- Logic Performance -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300">
+      <div class="flex justify-between items-center mb-4 cursor-pointer" id="performance-header">
+        <h2 class="text-xl font-semibold text-gray-800">Performance Manpower</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down performance-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div id="performance-content" class="grid grid-cols-1 md:grid-cols-5 gap-4 hidden">
+        <!-- Card Jumlah Picker -->
+        <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between col-span-1">
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Jumlah Picker</p>
+                <input type="number" id="picker-input" value="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 text-center text-2xl font-semibold text-gray-800 transition-colors duration-300" min="0">
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-check text-blue-500 opacity-60"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+        </div>
+        <!-- Card Jumlah Packer -->
+        <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between col-span-1">
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Jumlah Packer</p>
+                <input type="number" id="packer-input" value="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 text-center text-2xl font-semibold text-gray-800 transition-colors duration-300" min="0">
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-plus text-emerald-500 opacity-60"><path d="M16 11V5.5L8.5 2H2v13.5L8.5 18H15"/><path d="M16 11h6v8a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z"/><path d="M22 16h-3"/><path d="M19 13v6"/></svg>
+        </div>
+
+        <div id="card-performance" class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between col-span-1">
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Performance</p>
+                <p class="text-2xl font-semibold mt-1 text-gray-800" id="performance-percentage">0%</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-line-chart text-sky-500 opacity-60"><path d="M3 3v18h18"/><path d="m18 8-5 5-4-4-5 5"/></svg>
+        </div>
+
+        <div id="card-average-pick" class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between col-span-1">
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Rata-rata Pick/Jam</p>
+                <p class="text-2xl font-semibold mt-1 text-gray-800" id="average-pick-per-hour">0</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-3 text-fuchsia-500 opacity-60"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+        </div>
+        <div id="card-average-pack" class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between col-span-1">
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Rata-rata Pack/Jam</p>
+                <p class="text-2xl font-semibold mt-1 text-gray-800" id="average-pack-per-hour">0</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock text-red-500 opacity-60"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bagian Input dan Grafik Pick Lead Time -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300">
+      <div class="flex justify-between items-center mb-4 cursor-pointer" id="pick-header">
+        <h2 class="text-xl font-semibold text-gray-800">Pick Lead Time</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down pick-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div id="pick-content">
+        <div class="flex items-center space-x-2 mb-4">
+          <label for="pick-start-hour" class="text-sm font-medium text-gray-700">From:</label>
+          <input type="number" id="pick-start-hour" value="0" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
+          <label for="pick-end-hour" class="text-sm font-medium text-gray-700">To:</label>
+          <input type="number" id="pick-end-hour" value="24" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
+        </div>
+        <div class="overflow-x-auto pb-4">
+          <div id="pick-input-container" class="flex space-x-2 min-w-[1200px]">
+            <!-- Input fields akan digenerate oleh JavaScript -->
+          </div>
+        </div>
+        <div class="mt-8 h-80">
+          <h3 class="text-lg font-medium text-gray-800 mb-4">Grafik Total Picked</h3>
+          <canvas id="pick-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bagian Input dan Grafik Pack Lead Time -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300">
+      <div class="flex justify-between items-center mb-4 cursor-pointer" id="pack-header">
+        <h2 class="text-xl font-semibold text-gray-800">Pack Lead Time</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down pack-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div id="pack-content">
+        <div class="flex items-center space-x-2 mb-4">
+          <label for="pack-start-hour" class="text-sm font-medium text-gray-700">From:</label>
+          <input type="number" id="pack-start-hour" value="0" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
+          <label for="pack-end-hour" class="text-sm font-medium text-gray-700">To:</label>
+          <input type="number" id="pack-end-hour" value="24" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
+        </div>
+        <div class="overflow-x-auto pb-4">
+          <div id="pack-input-container" class="flex space-x-2 min-w-[1200px]">
+            <!-- Input fields akan digenerate oleh JavaScript -->
+          </div>
+        </div>
+        <div class="mt-8 h-80">
+          <h3 class="text-lg font-medium text-gray-800 mb-4">Grafik Total Packed</h3>
+          <canvas id="pack-chart"></canvas>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <script>
+    // Inisialisasi state awal
+    let pickData = [];
+    let packData = [];
+    let originalPickData = [];
+    let originalPackData = [];
+    let summary = {};
+    let pickChartInstance;
+    let packChartInstance;
+
+    // Fungsi untuk membuat array jam dari 00:00 sampai 24:00
+    const generateHours = () => {
+        const hours = [];
+        for (let i = 0; i < 24; i++) {
+            hours.push(`${i}:00`);
+        }
+        hours.push('24:00');
+        return hours;
+    };
+    
+    const hours = generateHours();
+
+    // Fungsi untuk memperbarui semua metrik ringkasan
+    const updateSummary = () => {
+        const totalPickOrder = pickData.reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0);
+        const totalPackOrder = packData.reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0);
+        const paymentOrders = parseInt(document.getElementById('payment-input').value, 10) || 0;
+        const pickerCount = parseInt(document.getElementById('picker-input').value, 10) || 0;
+        const packerCount = parseInt(document.getElementById('packer-input').value, 10) || 0;
+
+        const nonZeroPickValues = pickData.filter(v => v > 0);
+        const nonZeroPackValues = packData.filter(v => v > 0);
+
+        // Perhitungan rata-rata per jam
+        const averagePickPerHour = nonZeroPickValues.length > 0
+            ? Math.round(totalPickOrder / nonZeroPickValues.length)
+            : '0';
+            
+        const averagePackPerHour = nonZeroPackValues.length > 0
+            ? Math.round(totalPackOrder / nonZeroPackValues.length)
+            : '0';
+
+        const totalPacked = totalPackOrder;
+        const inProgressOrders = totalPickOrder - totalPacked;
+        const backlogOrders = inProgressOrders + paymentOrders;
+        
+        // Logika Performance Shift
+        const shift1Hours = 8;
+        const targetOrdersPerHour = 800;
+        const totalOrdersInShift1 = originalPickData.slice(0, shift1Hours).reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0) +
+                                    originalPackData.slice(0, shift1Hours).reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0);
+        
+        const targetOrdersPerShift = targetOrdersPerHour * shift1Hours;
+        let performancePercentage = (totalOrdersInShift1 / targetOrdersPerShift) * 100;
+
+        if ((totalOrdersInShift1 / shift1Hours) < targetOrdersPerHour) {
+          const totalBacklog = backlogOrders;
+          const totalPayment = paymentOrders;
+          
+          if (totalPayment + totalBacklog > 0) {
+            const backlogFactor = totalBacklog / (totalPayment + totalBacklog);
+            performancePercentage = performancePercentage * (1 - backlogFactor);
+          }
+        }
+        
+        performancePercentage = Math.min(performancePercentage.toFixed(2), 100);
+
+        summary = {
+            totalPickOrder,
+            totalPacked,
+            payment: paymentOrders,
+            inProgress: inProgressOrders,
+            averagePickPerHour,
+            averagePackPerHour,
+            backlog: backlogOrders,
+            pickerCount,
+            packerCount,
+            performanceShift1: performancePercentage,
+        };
+
+        // Render nilai-nilai baru ke DOM
+        document.getElementById('total-pick-order').innerText = summary.totalPickOrder;
+        document.getElementById('total-packed-orders').innerText = summary.totalPacked;
+        document.getElementById('in-progress-orders').innerText = summary.inProgress;
+        document.getElementById('average-pick-per-hour').innerText = `${summary.averagePickPerHour}`;
+        document.getElementById('average-pack-per-hour').innerText = `${summary.averagePackPerHour}`;
+        document.getElementById('backlog-orders').innerText = summary.backlog;
+        document.getElementById('performance-percentage').innerText = `${summary.performanceShift1}%`;
+    };
+
+    // Fungsi untuk merender grafik
+    const renderCharts = () => {
+        // Register plugin for datalabels
+        Chart.register(ChartDataLabels);
+
+        // Mempersiapkan data untuk grafik berdasarkan filter
+        const pickContent = document.getElementById('pick-content');
+        let startPickHour = 0;
+        let endPickHour = 24;
+
+        if (!pickContent.classList.contains('hidden')) {
+            startPickHour = parseInt(document.getElementById('pick-start-hour').value, 10);
+            endPickHour = parseInt(document.getElementById('pick-end-hour').value, 10);
+        }
+        
+        const filteredPickHours = hours.slice(startPickHour, endPickHour + 1);
+        const filteredPickData = originalPickData.slice(startPickHour, endPickHour + 1);
+        
+        if (pickChartInstance) pickChartInstance.destroy();
+        pickChartInstance = new Chart(document.getElementById('pick-chart'), {
+            type: 'bar',
+            data: {
+                labels: filteredPickHours,
+                datasets: [{
+                    label: 'Jumlah Order Picked',
+                    data: filteredPickData,
+                    backgroundColor: '#8884d8',
+                    borderRadius: 10,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: (value) => value > 0 ? value : '', // Hanya tampilkan jika nilai > 0
+                        color: '#4A5568',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        });
+        
+        const packContent = document.getElementById('pack-content');
+        let startPackHour = 0;
+        let endPackHour = 24;
+
+        if (!packContent.classList.contains('hidden')) {
+            startPackHour = parseInt(document.getElementById('pack-start-hour').value, 10);
+            endPackHour = parseInt(document.getElementById('pack-end-hour').value, 10);
+        }
+
+        const filteredPackHours = hours.slice(startPackHour, endPackHour + 1);
+        const filteredPackData = originalPackData.slice(startPackHour, endPackHour + 1);
+        
+        if (packChartInstance) packChartInstance.destroy();
+        packChartInstance = new Chart(document.getElementById('pack-chart'), {
+            type: 'bar',
+            data: {
+                labels: filteredPackHours,
+                datasets: [{
+                    label: 'Jumlah Order Packed',
+                    data: filteredPackData,
+                    backgroundColor: '#3b82f6',
+                    borderRadius: 10,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: (value) => value > 0 ? value : '', // Hanya tampilkan jika nilai > 0
+                        color: '#4A5568',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        });
+    };
+
+    // Fungsi utama yang mengupdate dashboard
+    const updateDashboard = () => {
+        updateSummary();
+        renderCharts();
+    };
+
+    // Fungsi untuk membuat input fields secara dinamis
+    const createInputFields = () => {
+        const pickInputContainer = document.getElementById('pick-input-container');
+        const packInputContainer = document.getElementById('pack-input-container');
+
+        hours.forEach((hour, index) => {
+            // Input untuk Pick Lead Time
+            const pickInputDiv = document.createElement('div');
+            pickInputDiv.className = 'flex-none w-24 text-center';
+            pickInputDiv.innerHTML = `
+                <label class="block text-sm font-medium text-gray-500">${hour}</label>
+                <input type="number" data-index="${index}" class="pick-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-center" value="0" min="0">
+            `;
+            pickInputContainer.appendChild(pickInputDiv);
+
+            // Input untuk Pack Lead Time
+            const packInputDiv = document.createElement('div');
+            packInputDiv.className = 'flex-none w-24 text-center';
+            packInputDiv.innerHTML = `
+                <label class="block text-sm font-medium text-gray-500">${hour}</label>
+                <input type="number" data-index="${index}" class="pack-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-center" value="0" min="0">
+            `;
+            packInputContainer.appendChild(packInputDiv);
+        });
+
+        // Tambahkan event listeners ke input fields
+        pickInputContainer.querySelectorAll('.pick-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const index = e.target.dataset.index;
+                originalPickData[index] = parseInt(e.target.value, 10) || 0;
+                pickData = [...originalPickData];
+                updateDashboard();
+            });
+        });
+        packInputContainer.querySelectorAll('.pack-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const index = e.target.dataset.index;
+                originalPackData[index] = parseInt(e.target.value, 10) || 0;
+                packData = [...originalPackData];
+                updateDashboard();
+            });
+        });
+    };
+
+    // Jalankan inisialisasi saat halaman dimuat
+    window.onload = () => {
+        // Inisialisasi tema dari localStorage
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.body.classList.add('dark');
+        }
+
+        // Inisialisasi data dengan 0
+        originalPickData = hours.map(() => 0);
+        originalPackData = hours.map(() => 0);
+        pickData = [...originalPickData];
+        packData = [...originalPackData];
+        
+        createInputFields();
+        updateDashboard();
+        
+        // Tambahkan event listener untuk input payment
+        document.getElementById('payment-input').addEventListener('input', updateSummary);
+        document.getElementById('picker-input').addEventListener('input', updateSummary);
+        document.getElementById('packer-input').addEventListener('input', updateSummary);
+        
+        // Tambahkan event listener untuk filter dan collapsible
+        const pickHeader = document.getElementById('pick-header');
+        const pickIcon = pickHeader.querySelector('.pick-header-icon');
+        const pickContent = document.getElementById('pick-content');
+        pickHeader.addEventListener('click', () => {
+          const isHidden = pickContent.classList.toggle('hidden');
+          if (isHidden) {
+            pickIcon.classList.add('rotate-180');
+          } else {
+            pickIcon.classList.remove('rotate-180');
+          }
+        });
+        
+        const packHeader = document.getElementById('pack-header');
+        const packIcon = packHeader.querySelector('.pack-header-icon');
+        const packContent = document.getElementById('pack-content');
+        packHeader.addEventListener('click', () => {
+          const isHidden = packContent.classList.toggle('hidden');
+          if (isHidden) {
+            packIcon.classList.add('rotate-180');
+          } else {
+            packIcon.classList.remove('rotate-180');
+          }
+        });
+
+        // Event listener for filter inputs to update charts dynamically
+        document.getElementById('pick-start-hour').addEventListener('input', updateDashboard);
+        document.getElementById('pick-end-hour').addEventListener('input', updateDashboard);
+        document.getElementById('pack-start-hour').addEventListener('input', updateDashboard);
+        document.getElementById('pack-end-hour').addEventListener('input', updateDashboard);
+
+        // Tambahkan event listener untuk tombol toggle tema
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+          document.documentElement.classList.toggle('dark');
+          document.body.classList.toggle('dark');
+          const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+          localStorage.setItem('theme', currentTheme);
+        });
+
+        // Event listener untuk header performance-content
+        const performanceHeader = document.getElementById('performance-header');
+        const performanceContent = document.getElementById('performance-content');
+        const performanceIcon = performanceHeader.querySelector('.performance-header-icon');
+        performanceHeader.addEventListener('click', () => {
+          const isHidden = performanceContent.classList.toggle('hidden');
+          if (isHidden) {
+            performanceIcon.classList.add('rotate-180');
+          } else {
+            performanceIcon.classList.remove('rotate-180');
+          }
+        });
+    };
+  </script>
+</body>
+</html>
