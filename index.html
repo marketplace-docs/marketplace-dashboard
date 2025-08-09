@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marketplace Report Hours Dashboard</title>
+  <title>Marketplace Dashboard</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
@@ -40,6 +40,33 @@
     .rotate-180 {
       transform: rotate(180deg);
     }
+    #toast-container {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .toast {
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.5rem;
+        color: white;
+        font-weight: 500;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        animation: fadeInOut 4s forwards;
+    }
+    .toast.success {
+        background-color: #10B981;
+    }
+    .toast.error {
+        background-color: #EF4444;
+    }
+    @keyframes fadeInOut {
+        0%, 100% { opacity: 0; }
+        10%, 90% { opacity: 1; }
+    }
   </style>
 </head>
 <body class="bg-gray-100 p-4 overflow-y-auto transition-colors duration-300">
@@ -50,7 +77,7 @@
     <header class="flex items-center justify-between p-6 bg-white rounded-2xl shadow-lg transition-colors duration-300">
       <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard text-indigo-600"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
-        Marketplace Reports
+        Marketplace Reporting
       </h1>
       <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-300">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon dark:text-yellow-400 text-gray-800"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
@@ -61,21 +88,21 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-4" id="summary-metrics">
       <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium opacity-80">TOTAL PICK ORDERS</p>
+          <p class="text-sm font-medium opacity-80">Total Pick Order</p>
           <p class="text-3xl font-semibold mt-1" id="total-pick-order">0</p>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-boxes opacity-30"><path d="M2.97 10.18a2 2 0 0 0-.2 3.63L9 16.5a2 2 0 0 0 2-.36l5.54-3.84a2 2 0 0 0 .19-3.59L9.13 7.63a2 2 0 0 0-2.08.33l-4.08 2.22Z"/><path d="M2.97 10.18a2 2 0 0 1 .19-3.59L9.13 3.5a2 2 0 0 1 2.08-.33l4.08 2.22a2 2 0 0 1 .19 3.59L9.13 12.5a2 2 0 0 1-2.08.33l-4.08-2.22Z"/><path d="M11.07 13.52a2 2 0 0 1 2.08-.33l4.08 2.22a2 2 0 0 1 .2 3.63l-5.83 2.7a2 2 0 0 1-2-.36l-5.54-3.84a2 2 0 0 1-.19-3.59l5.83-2.7Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-boxes opacity-30"><path d="M2.97 10.18a2 2 0 0 0-.2 3.63L9 16.5a2 2 0 0 0 2-.36l5.54-3.84a2 2 0 0 0 .19-3.59L9.13 7.63a2 2 0 0 0-2.08.33l-4.08 2.22Z"/><path d="M2.97 10.18a2 2 0 0 1 .19-3.59L9.13 3.5a2 2 0 0 1 2.08-.33l4.08 2.22a2 2 0 0 1 .19 3.59L9.13 12.5a2 2 0 0 1-2.08.33l-4.08-2.22Z"/><path d="M11.07 13.52a2 2 0 0 1 2.08-.33l4.08 2.22a2 2 0 0 1 .2 3.63l-5.83 2.7a2 2 0 0 1-2-.36l-5.54-3.84a2 2 0 0 1-.19-3.59l5.83-2.7z"/></svg>
       </div>
       <div class="bg-gradient-to-r from-teal-500 to-emerald-600 text-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium opacity-80">TOTAL PACKED ORDER</p>
+          <p class="text-sm font-medium opacity-80">Total Packed</p>
           <p class="text-3xl font-semibold mt-1" id="total-packed-orders">0</p>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-check opacity-30"><path d="M16 11V5.5L8.5 2H2v13.5L8.5 18H15v-7"/><path d="M16 11h6v8a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z"/><path d="m20 12 2 2.5"/><path d="m22 12-2 2.5"/></svg>
       </div>
       <div class="bg-gradient-to-r from-yellow-500 to-orange-600 text-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium opacity-80">TOTAL SHIPPED ORDER</p>
+          <p class="text-sm font-medium opacity-80">Total Shipped</p>
           <p class="text-3xl font-semibold mt-1" id="total-shipped-orders">0</p>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send-horizonal opacity-30"><path d="m3 3 3 9-3 9 19-9-19-9Z"/><path d="M6 12h16"/></svg>
@@ -107,9 +134,9 @@
     <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300">
       <div class="flex justify-between items-center mb-4 cursor-pointer" id="performance-header">
         <h2 class="text-xl font-semibold text-gray-800">Performance Manpower</h2>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down performance-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg xmlns="http://www.w3.org/2d00/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down performance-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <div id="performance-content" class="grid grid-cols-1 md:grid-cols-5 gap-4 hidden">
+      <div id="performance-content" class="grid grid-cols-1 md:grid-cols-6 gap-4 hidden">
         <!-- Card Jumlah Picker -->
         <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between col-span-1">
             <div>
@@ -127,10 +154,24 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-plus text-emerald-500 opacity-60"><path d="M16 11V5.5L8.5 2H2v13.5L8.5 18H15"/><path d="M16 11h6v8a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z"/><path d="M22 16h-3"/><path d="M19 13v6"/></svg>
         </div>
 
-        <div id="card-performance" class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between col-span-1">
+        <div id="card-performance-picker" class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between col-span-1">
             <div>
-                <p class="text-sm text-gray-500 font-medium">Performance</p>
-                <p class="text-2xl font-semibold mt-1 text-gray-800" id="performance-percentage">0%</p>
+                <p class="text-sm text-gray-500 font-medium">Performance Picker</p>
+                <p class="text-2xl font-semibold mt-1 text-gray-800" id="performance-picker-percentage">0%</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-line-chart text-sky-500 opacity-60"><path d="M3 3v18h18"/><path d="m18 8-5 5-4-4-5 5"/></svg>
+        </div>
+        <div id="card-performance-packer" class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between col-span-1">
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Performance Packer</p>
+                <p class="text-2xl font-semibold mt-1 text-gray-800" id="performance-packer-percentage">0%</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-line-chart text-sky-500 opacity-60"><path d="M3 3v18h18"/><path d="m18 8-5 5-4-4-5 5"/></svg>
+        </div>
+        <div id="card-performance-shipped" class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between col-span-1">
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Performance Shipped</p>
+                <p class="text-2xl font-semibold mt-1 text-gray-800" id="performance-shipped-percentage">0%</p>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-line-chart text-sky-500 opacity-60"><path d="M3 3v18h18"/><path d="m18 8-5 5-4-4-5 5"/></svg>
         </div>
@@ -162,16 +203,20 @@
     <!-- Bagian Input dan Grafik Pick Lead Time -->
     <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300">
       <div class="flex justify-between items-center mb-4 cursor-pointer" id="pick-header">
-        <h2 class="text-xl font-semibold text-gray-800">Summary Pick Total</h2>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down pick-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div id="pick-content">
-        <div class="flex items-center space-x-2 mb-4">
+        <h2 class="text-xl font-semibold text-gray-800">Wave Pick</h2>
+        <div class="flex items-center space-x-2">
           <label for="pick-start-hour" class="text-sm font-medium text-gray-700">From:</label>
           <input type="number" id="pick-start-hour" value="0" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
           <label for="pick-end-hour" class="text-sm font-medium text-gray-700">To:</label>
           <input type="number" id="pick-end-hour" value="24" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
         </div>
+        <div class="flex items-center space-x-2 ml-4">
+            <button onclick="uploadCSV('pick')" class="px-3 py-1 bg-blue-500 text-white text-sm rounded-md shadow-md hover:bg-blue-600 transition-colors">Upload CSV</button>
+            <button onclick="exportCSV('pick')" class="px-3 py-1 bg-green-500 text-white text-sm rounded-md shadow-md hover:bg-green-600 transition-colors">Export CSV</button>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down pick-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div id="pick-content">
         <div class="overflow-x-auto pb-4">
           <div id="pick-input-container" class="flex space-x-2 min-w-[1200px]">
             <!-- Input fields akan digenerate oleh JavaScript -->
@@ -187,16 +232,20 @@
     <!-- Bagian Input dan Grafik Pack Lead Time -->
     <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300">
       <div class="flex justify-between items-center mb-4 cursor-pointer" id="pack-header">
-        <h2 class="text-xl font-semibold text-gray-800">Summary Pack Total</h2>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down pack-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div id="pack-content">
-        <div class="flex items-center space-x-2 mb-4">
+        <h2 class="text-xl font-semibold text-gray-800">Summary Pack</h2>
+        <div class="flex items-center space-x-2">
           <label for="pack-start-hour" class="text-sm font-medium text-gray-700">From:</label>
           <input type="number" id="pack-start-hour" value="0" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
           <label for="pack-end-hour" class="text-sm font-medium text-gray-700">To:</label>
           <input type="number" id="pack-end-hour" value="24" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
         </div>
+        <div class="flex items-center space-x-2 ml-4">
+            <button onclick="uploadCSV('pack')" class="px-3 py-1 bg-blue-500 text-white text-sm rounded-md shadow-md hover:bg-blue-600 transition-colors">Upload CSV</button>
+            <button onclick="exportCSV('pack')" class="px-3 py-1 bg-green-500 text-white text-sm rounded-md shadow-md hover:bg-green-600 transition-colors">Export CSV</button>
+        </div>
+        <svg xmlns="http://www.w3.org/2d00/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down pack-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div id="pack-content">
         <div class="overflow-x-auto pb-4">
           <div id="pack-input-container" class="flex space-x-2 min-w-[1200px]">
             <!-- Input fields akan digenerate oleh JavaScript -->
@@ -212,16 +261,20 @@
     <!-- Bagian Input dan Grafik Shipped -->
     <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300">
       <div class="flex justify-between items-center mb-4 cursor-pointer" id="shipped-header">
-        <h2 class="text-xl font-semibold text-gray-800">Summary Shipped Total</h2>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down shipped-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div id="shipped-content">
-        <div class="flex items-center space-x-2 mb-4">
+        <h2 class="text-xl font-semibold text-gray-800">Summary Shipped</h2>
+        <div class="flex items-center space-x-2">
           <label for="shipped-start-hour" class="text-sm font-medium text-gray-700">From:</label>
           <input type="number" id="shipped-start-hour" value="0" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
           <label for="shipped-end-hour" class="text-sm font-medium text-gray-700">To:</label>
           <input type="number" id="shipped-end-hour" value="24" min="0" max="24" class="w-16 p-1 border rounded-md text-center">
         </div>
+        <div class="flex items-center space-x-2 ml-4">
+            <button onclick="uploadCSV('shipped')" class="px-3 py-1 bg-blue-500 text-white text-sm rounded-md shadow-md hover:bg-blue-600 transition-colors">Upload CSV</button>
+            <button onclick="exportCSV('shipped')" class="px-3 py-1 bg-green-500 text-white text-sm rounded-md shadow-md hover:bg-green-600 transition-colors">Export CSV</button>
+        </div>
+        <svg xmlns="http://www.w3.org/2d00/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down shipped-header-icon"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div id="shipped-content">
         <div class="overflow-x-auto pb-4">
           <div id="shipped-input-container" class="flex space-x-2 min-w-[1200px]">
             <!-- Input fields akan digenerasi oleh JavaScript -->
@@ -235,6 +288,8 @@
     </div>
 
   </div>
+  
+  <div id="toast-container"></div>
 
   <script>
     // Inisialisasi state awal
@@ -260,6 +315,22 @@
     };
     
     const hours = generateHours();
+
+    // Fungsi untuk menampilkan notifikasi toast
+    const showToast = (message, type) => {
+        const toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            console.error('Toast container not found.');
+            return;
+        }
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerText = message;
+        toastContainer.appendChild(toast);
+        setTimeout(() => {
+            toast.remove();
+        }, 4000);
+    };
 
     // Fungsi untuk memperbarui semua metrik ringkasan
     const updateSummary = () => {
@@ -292,27 +363,14 @@
         const backlogOrders = inProgressOrders + paymentOrders;
         
         // Logika Performance
-        const shift1Hours = 8;
-        const targetOrdersPerHour = 800;
-        const totalOrdersInShift1 = originalPickData.slice(0, shift1Hours).reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0) +
-                                    originalPackData.slice(0, shift1Hours).reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0) +
-                                    originalShippedData.slice(0, shift1Hours).reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0);
+        const targetPick = 650;
+        const targetPack = 525;
+        const targetShipped = 500;
         
-        const targetOrdersPerShift = targetOrdersPerHour * shift1Hours;
-        let performancePercentage = (totalOrdersInShift1 / targetOrdersPerShift) * 100;
-
-        if ((totalOrdersInShift1 / shift1Hours) < targetOrdersPerHour) {
-          const totalBacklog = backlogOrders;
-          const totalPayment = paymentOrders;
-          
-          if (totalPayment + totalBacklog > 0) {
-            const backlogFactor = totalBacklog / (totalPayment + totalBacklog);
-            performancePercentage = performancePercentage * (1 - backlogFactor);
-          }
-        }
+        const performancePicker = Math.min((totalPickOrder / (targetPick * (nonZeroPickValues.length > 0 ? nonZeroPickValues.length : 1))) * 100, 100);
+        const performancePacker = Math.min((totalPackOrder / (targetPack * (nonZeroPackValues.length > 0 ? nonZeroPackValues.length : 1))) * 100, 100);
+        const performanceShipped = Math.min((totalShippedOrder / (targetShipped * (nonZeroShippedValues.length > 0 ? nonZeroShippedValues.length : 1))) * 100, 100);
         
-        performancePercentage = Math.min(performancePercentage.toFixed(2), 100);
-
         summary = {
             totalPickOrder,
             totalPacked: totalPackOrder,
@@ -325,19 +383,43 @@
             backlog: backlogOrders,
             pickerCount,
             packerCount,
-            performance: performancePercentage,
+            performancePicker: performancePicker.toFixed(2),
+            performancePacker: performancePacker.toFixed(2),
+            performanceShipped: performanceShipped.toFixed(2),
         };
 
         // Render nilai-nilai baru ke DOM
-        document.getElementById('total-pick-order').innerText = summary.totalPickOrder;
-        document.getElementById('total-packed-orders').innerText = summary.totalPacked;
-        document.getElementById('total-shipped-orders').innerText = summary.totalShipped;
-        document.getElementById('in-progress-orders').innerText = summary.inProgress;
-        document.getElementById('backlog-orders').innerText = summary.backlog;
-        document.getElementById('average-pick-per-hour').innerText = `${summary.averagePickPerHour}`;
-        document.getElementById('average-pack-per-hour').innerText = `${summary.averagePackPerHour}`;
-        document.getElementById('average-shipped-per-hour').innerText = `${summary.averageShippedPerHour}`;
-        document.getElementById('performance-percentage').innerText = `${summary.performance}%`;
+        if(document.getElementById('total-pick-order')) document.getElementById('total-pick-order').innerText = summary.totalPickOrder;
+        if(document.getElementById('total-packed-orders')) document.getElementById('total-packed-orders').innerText = summary.totalPacked;
+        if(document.getElementById('total-shipped-orders')) document.getElementById('total-shipped-orders').innerText = summary.totalShipped;
+        if(document.getElementById('in-progress-orders')) document.getElementById('in-progress-orders').innerText = summary.inProgress;
+        if(document.getElementById('backlog-orders')) document.getElementById('backlog-orders').innerText = summary.backlog;
+        if(document.getElementById('performance-picker-percentage')) document.getElementById('performance-picker-percentage').innerText = `${summary.performancePicker}%`;
+        if(document.getElementById('performance-packer-percentage')) document.getElementById('performance-packer-percentage').innerText = `${summary.performancePacker}%`;
+        if(document.getElementById('performance-shipped-percentage')) document.getElementById('performance-shipped-percentage').innerText = `${summary.performanceShipped}%`;
+        if(document.getElementById('average-pick-per-hour')) document.getElementById('average-pick-per-hour').innerText = `${summary.averagePickPerHour}`;
+        if(document.getElementById('average-pack-per-hour')) document.getElementById('average-pack-per-hour').innerText = `${summary.averagePackPerHour}`;
+        if(document.getElementById('average-shipped-per-hour')) document.getElementById('average-shipped-per-hour').innerText = `${summary.averageShippedPerHour}`;
+        
+
+        // Update warna indikator performa
+        const updatePerformanceColor = (elementId, percentage) => {
+            const card = document.getElementById(elementId);
+            if (card) {
+                card.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-red-500');
+                if (percentage >= 100) {
+                    card.classList.add('bg-green-500');
+                } else if (percentage >= 90) {
+                    card.classList.add('bg-yellow-500');
+                } else {
+                    card.classList.add('bg-red-500');
+                }
+            }
+        };
+
+        updatePerformanceColor('card-performance-picker', summary.performancePicker);
+        updatePerformanceColor('card-performance-packer', summary.performancePacker);
+        updatePerformanceColor('card-performance-shipped', summary.performanceShipped);
     };
 
     // Fungsi untuk merender grafik
@@ -350,7 +432,7 @@
         let startPickHour = 0;
         let endPickHour = 24;
 
-        if (!pickContent.classList.contains('hidden')) {
+        if (pickContent && !pickContent.classList.contains('hidden')) {
             startPickHour = parseInt(document.getElementById('pick-start-hour').value, 10);
             endPickHour = parseInt(document.getElementById('pick-end-hour').value, 10);
         }
@@ -558,6 +640,125 @@
         }
     };
 
+    // Fungsi untuk export data ke CSV
+    const exportCSV = (type) => {
+        let data, filename, headers;
+        if (type === 'pick') {
+            data = originalPickData;
+            filename = 'pick_data.csv';
+            headers = ['Jam', 'Jumlah Order Picked'];
+        } else if (type === 'pack') {
+            data = originalPackData;
+            filename = 'pack_data.csv';
+            headers = ['Jam', 'Jumlah Order Packed'];
+        } else if (type === 'shipped') {
+            data = originalShippedData;
+            filename = 'shipped_data.csv';
+            headers = ['Jam', 'Jumlah Order Shipped'];
+        }
+
+        let csvContent = headers.join(',') + '\n';
+        hours.forEach((hour, index) => {
+            csvContent += `${hour},${data[index]}\n`;
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
+    // Fungsi untuk upload CSV
+    const uploadCSV = (type) => {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.csv';
+        fileInput.style.display = 'none';
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) {
+                showToast('Upload dibatalkan', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const csvData = event.target.result;
+                    const lines = csvData.split('\n');
+                    const newData = Array(hours.length).fill(0);
+                    
+                    lines.slice(1).forEach(line => {
+                        const parts = line.split(',');
+                        if (parts.length === 2) {
+                            const hour = parts[0].trim();
+                            const value = parseInt(parts[1].trim(), 10);
+                            const index = hours.indexOf(hour);
+                            if (index !== -1 && !isNaN(value)) {
+                                newData[index] = value;
+                            }
+                        }
+                    });
+
+                    if (type === 'pick') {
+                        originalPickData = [...newData];
+                        pickData = [...originalPickData];
+                        updateInputFieldsValues('pick', pickData);
+                    } else if (type === 'pack') {
+                        originalPackData = [...newData];
+                        packData = [...originalPackData];
+                        updateInputFieldsValues('pack', packData);
+                    } else if (type === 'shipped') {
+                        originalShippedData = [...newData];
+                        shippedData = [...originalShippedData];
+                        updateInputFieldsValues('shipped', shippedData);
+                    }
+                    updateDashboard();
+                    showToast('Upload CSV berhasil!', 'success');
+                } catch (error) {
+                    showToast('Gagal memproses file CSV.', 'error');
+                    console.error('Error processing CSV:', error);
+                }
+            };
+            reader.onerror = function() {
+                showToast('Gagal membaca file.', 'error');
+            };
+            reader.readAsText(file);
+        });
+
+        document.body.appendChild(fileInput);
+        fileInput.click();
+        document.body.removeChild(fileInput);
+    };
+
+    const updateInputFieldsValues = (type, data) => {
+        let containerId;
+        if (type === 'pick') {
+            containerId = 'pick-input-container';
+        } else if (type === 'pack') {
+            containerId = 'pack-input-container';
+        } else if (type === 'shipped') {
+            containerId = 'shipped-input-container';
+        }
+
+        const container = document.getElementById(containerId);
+        if (container) {
+            const inputs = container.querySelectorAll('input');
+            inputs.forEach((input, index) => {
+                input.value = data[index] || 0;
+            });
+        }
+    };
+
+
     // Jalankan inisialisasi saat halaman dimuat
     window.onload = () => {
         // Inisialisasi tema dari localStorage
@@ -611,18 +812,14 @@
         const shippedHeader = document.getElementById('shipped-header');
         const shippedIcon = shippedHeader.querySelector('.shipped-header-icon');
         const shippedContent = document.getElementById('shipped-content');
-        if (shippedHeader) {
-          shippedHeader.addEventListener('click', () => {
-            const isHidden = shippedContent.classList.toggle('hidden');
-            if (shippedIcon) {
-              if (isHidden) {
-                shippedIcon.classList.add('rotate-180');
-              } else {
-                shippedIcon.classList.remove('rotate-180');
-              }
-            }
-          });
-        }
+        shippedHeader.addEventListener('click', () => {
+          const isHidden = shippedContent.classList.toggle('hidden');
+          if (isHidden) {
+            shippedIcon.classList.add('rotate-180');
+          } else {
+            shippedIcon.classList.remove('rotate-180');
+          }
+        });
 
         // Event listener for filter inputs to update charts dynamically
         document.getElementById('pick-start-hour').addEventListener('input', updateDashboard);
@@ -646,8 +843,8 @@
 
         // Event listener untuk header performance-content
         const performanceHeader = document.getElementById('performance-header');
-        const performanceContent = document.getElementById('performance-content');
         const performanceIcon = performanceHeader.querySelector('.performance-header-icon');
+        const performanceContent = document.getElementById('performance-content');
         performanceHeader.addEventListener('click', () => {
           const isHidden = performanceContent.classList.toggle('hidden');
           if (isHidden) {
