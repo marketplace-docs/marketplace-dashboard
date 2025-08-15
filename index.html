@@ -104,7 +104,6 @@
             </div>
 
             <!-- Bagian Metrik Ringkasan -->
-            <!-- Adjusted grid columns to 5 after removing the summary backlog card -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4" id="summary-metrics">
                 <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
                     <div>
@@ -927,7 +926,7 @@
             const pickInputContainer = document.getElementById('pick-input-container');
             const packInputContainer = document.getElementById('pack-input-container');
             const shippedInputContainer = document.getElementById('shipped-input-container');
-            
+    
             if (pickInputContainer) {
               hours.forEach((hour, index) => {
                   const pickInputDiv = document.createElement('div');
