@@ -78,6 +78,9 @@
         .dark .table-header-dark {
             color: #60a5fa; /* Warna biru untuk header tabel di mode gelap */
         }
+        .overflow-x-auto {
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body class="bg-gray-100 p-4 overflow-y-auto transition-colors duration-300">
@@ -90,7 +93,7 @@
                 <div class="flex items-center gap-2">
                     <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2d00/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart text-indigo-600"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.67 12.01h12.58l3.1-6H5.97"/></svg>
-                        Marketplace Dashboard
+                        Market Place Dashboard
                     </h1>
                 </div>
                 <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-300">
@@ -129,7 +132,6 @@
                 <div class="bg-white p-6 rounded-2xl shadow-lg transition-colors duration-300 flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 font-medium">Payment Accepted</p>
-                        <!-- Updated to display the total from backlog data, no longer a manual input -->
                         <p class="text-3xl font-semibold mt-1 text-gray-800" id="payment-accepted-count">0</p>
                     </div>
                     <svg xmlns="http://www.w3.org/2d00/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-coins text-amber-500 opacity-60"><path d="M9.9 14.24a3 3 0 0 0 4.2 0l2.82-2.82a3 3 0 0 0 0-4.2l-.28-.28a3 3 0 0 0-4.2 0l-2.82 2.82a3 3 0 0 0 0 4.2z"/><path d="M15.42 16.58a3 3 0 0 0-4.2 0l-2.82 2.82a3 3 0 0 0 0 4.2l.28.28a3 3 0 0 0 4.2 0l2.82-2.82a3 3 0 0 0 0-4.2z"/><path d="M9 10a5 5 0 0 0 0-10H5a5 5 0 0 0 0 10h4z"/><path d="M19 14a5 5 0 0 0 0-10h-4a5 5 0 0 0 0 10h4z"/></svg>
@@ -391,38 +393,24 @@
     
         // Data backlog yang diperbarui dari input Anda
         const initialBacklogData = [
-            { platform: "Shopee Carassun", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee Lilla", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee Cosrx", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee Beauty Outlet", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee Sukin", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Tiktok Sociolla", payment_order: "0", source: "Tiktok Official Store" },
-            { platform: "Tiktok Cosrx", payment_order: "0", source: "Tiktok Official Store" },
-            { platform: "Tokopedia Edit", payment_order: "0", source: "Tokopedia Official Store" },
-            { platform: "Tokopedia Lilla", payment_order: "0", source: "Tokopedia Official Store" },
-            { platform: "Tokopedia Sukin", payment_order: "0", source: "Tokopedia Official Store" },
-            { platform: "Tokopedia Cosrx", payment_order: "0", source: "Tokopedia Official Store" },
-            { platform: "Shopee Mediheal", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Tiktok Lilla", payment_order: "0", source: "Tiktok Official Store" },
-            { platform: "Shopee UIQ", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee Speak To Me", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee Derma Angel", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shoope Ariul", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee Espoir", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee Amuse", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shoope Ariul", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee Roundlab", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee Dr G", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee JungSaemMool", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Shopee Lilla Baby", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Tiktok Carassun", payment_order: "0", source: "Tiktok Official Store" },
-            { platform: "Shopee UB MOM", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Tiktok Derma Angel", payment_order: "0", source: "Tiktok Official Store" },
-            { platform: "Lazada Cosrx", payment_order: "0", source: "Lazada Official Store" },
-            { platform: "Gemistry Official Store", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Sungboon Editor Official", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Bioheal Official Store", payment_order: "0", source: "Shopee Official Store" },
-            { platform: "Woshday Official Store", payment_order: "0", source: "Shopee Official Store" }
+            { platform: "Shopee", payment_order: "0", source: "Edit by Sociolla" },
+            { platform: "Shopee Amuse", payment_order: "0", source: "Amuse Official Store" },
+            { platform: "Shopee Ariul", payment_order: "0", source: "Ariul Official Store" },
+            { platform: "Shopee COSRX", payment_order: "0", source: "COSRX Official Store" },
+            { platform: "Shopee Derma Angel", payment_order: "0", source: "Derma Angel Official Store" },
+            { platform: "Shopee Dr G", payment_order: "0", source: "Dr G Official Store" },
+            { platform: "Shopee Espoir", payment_order: "0", source: "Espoir Official Store" },
+            { platform: "Shopee Jung Saem Mool", payment_order: "0", source: "Jung Saem Mool Official Store" },
+            { platform: "Shopee Lilla", payment_order: "0", source: "Lilla Official store" },
+            { platform: "Shopee Lilla Baby", payment_order: "0", source: "Lilla Baby Indonesia" },
+            { platform: "Shopee Mediheal", payment_order: "0", source: "Mediheal Official Store" },
+            { platform: "Shopee Round Lab", payment_order: "0", source: "Round Lab Official Store" },
+            { platform: "Shopee Speak to me", payment_order: "0", source: "Speak to me Official Store" },
+            { platform: "Shopee Sukin", payment_order: "0", source: "Sukin Official Store" },
+            { platform: "Shopee UB Mom", payment_order: "0", source: "UB Mom Indonesia" },
+            { platform: "Shopee UIQ", payment_order: "0", source: "UIQ Official Store" },
+            { platform: "tiktok_cosrx", payment_order: "0", source: "COSRX Official Store" },
+            { platform: "tiktok_derma_angel", payment_order: "0", source: "Derma Angel Official Store" },
         ];
     
         const showToast = (message, type) => {
@@ -592,6 +580,8 @@
                         });
                         backlogData = [...newBacklogData];
                         updateDashboard();
+                        // Show the backlog content after successful upload
+                        document.getElementById('backlog-content').classList.remove('hidden');
                         showToast('Upload CSV Backlog berhasil!', 'success');
                     } catch (error) {
                         showToast('Gagal memproses file CSV.', 'error');
@@ -603,11 +593,12 @@
                 };
                 reader.readAsText(file);
             });
+    
             document.body.appendChild(fileInput);
             fileInput.click();
             document.body.removeChild(fileInput);
         };
-
+        
         const updateInputFieldsValues = (type, data) => {
             let containerId;
             if (type === 'pick') {
@@ -932,7 +923,7 @@
                   const pickInputDiv = document.createElement('div');
                   pickInputDiv.className = 'flex-none w-24 text-center';
                   pickInputDiv.innerHTML = `
-                      <label class="block text-sm font-medium text-gray-500">${hour}</label>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-500">${hour}</label>
                       <input type="number" data-index="${index}" class="pick-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-center" value="0" min="0">
                   `;
                   pickInputContainer.appendChild(pickInputDiv);
@@ -943,7 +934,7 @@
                   const packInputDiv = document.createElement('div');
                   packInputDiv.className = 'flex-none w-24 text-center';
                   packInputDiv.innerHTML = `
-                      <label class="block text-sm font-medium text-gray-500">${hour}</label>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-500">${hour}</label>
                       <input type="number" data-index="${index}" class="pack-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-center" value="0" min="0">
                   `;
                   packInputContainer.appendChild(packInputDiv);
@@ -954,7 +945,7 @@
                   const shippedInputDiv = document.createElement('div');
                   shippedInputDiv.className = 'flex-none w-24 text-center';
                   shippedInputDiv.innerHTML = `
-                      <label class="block text-sm font-medium text-gray-500">${hour}</label>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-500">${hour}</label>
                       <input type="number" data-index="${index}" class="shipped-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm text-center" value="0" min="0">
                   `;
                   shippedInputContainer.appendChild(shippedInputDiv);
@@ -1028,7 +1019,28 @@
             pickData = [...originalPickData];
             packData = [...originalPackData];
             shippedData = [...originalShippedData];
-            backlogData = initialBacklogData.map(item => ({ ...item, payment_order: "0" })); // Reset payment orders to 0
+            
+            // Set initial data for backlog
+            backlogData = [
+                { platform: "Shopee", payment_order: "0", source: "Edit by Sociolla" },
+                { platform: "Shopee Amuse", payment_order: "0", source: "Amuse Official Store" },
+                { platform: "Shopee Ariul", payment_order: "0", source: "Ariul Official Store" },
+                { platform: "Shopee COSRX", payment_order: "0", source: "COSRX Official Store" },
+                { platform: "Shopee Derma Angel", payment_order: "0", source: "Derma Angel Official Store" },
+                { platform: "Shopee Dr G", payment_order: "0", source: "Dr G Official Store" },
+                { platform: "Shopee Espoir", payment_order: "0", source: "Espoir Official Store" },
+                { platform: "Shopee Jung Saem Mool", payment_order: "0", source: "Jung Saem Mool Official Store" },
+                { platform: "Shopee Lilla", payment_order: "0", source: "Lilla Official store" },
+                { platform: "Shopee Lilla Baby", payment_order: "0", source: "Lilla Baby Indonesia" },
+                { platform: "Shopee Mediheal", payment_order: "0", source: "Mediheal Official Store" },
+                { platform: "Shopee Round Lab", payment_order: "0", source: "Round Lab Official Store" },
+                { platform: "Shopee Speak to me", payment_order: "0", source: "Speak to me Official Store" },
+                { platform: "Shopee Sukin", payment_order: "0", source: "Sukin Official Store" },
+                { platform: "Shopee UB Mom", payment_order: "0", source: "UB Mom Indonesia" },
+                { platform: "Shopee UIQ", payment_order: "0", source: "UIQ Official Store" },
+                { platform: "tiktok_cosrx", payment_order: "0", source: "COSRX Official Store" },
+                { platform: "tiktok_derma_angel", payment_order: "0", source: "Derma Angel Official Store" },
+            ];
             
             createInputFields();
             updateDashboard();
