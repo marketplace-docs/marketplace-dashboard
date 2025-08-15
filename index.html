@@ -68,6 +68,16 @@
             0%, 100% { opacity: 0; }
             10%, 90% { opacity: 1; }
         }
+        /* Tambahan styling untuk mode gelap */
+        .dark .text-gray-900 {
+            color: #e0e0e0; /* Warna teks yang lebih terang untuk mode gelap */
+        }
+        .dark .text-gray-700 {
+            color: #b0b0b0; /* Warna teks yang lebih terang untuk mode gelap */
+        }
+        .dark .table-header-dark {
+            color: #60a5fa; /* Warna biru untuk header tabel di mode gelap */
+        }
     </style>
 </head>
 <body class="bg-gray-100 p-4 overflow-y-auto transition-colors duration-300">
@@ -228,9 +238,9 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Platform</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Payment Order</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Source</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:table-header-dark uppercase tracking-wider">Store Name</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:table-header-dark uppercase tracking-wider">Payment Order</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:table-header-dark uppercase tracking-wider">Marketplace Store</th>
                                 </tr>
                             </thead>
                             <tbody id="backlog-table-body" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
@@ -242,10 +252,10 @@
                     <!-- Grafik Backlog -->
                     <div class="mt-8 h-80">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 id="backlog-chart-title" class="text-lg font-medium text-gray-800 dark:text-gray-300">Grafik Backlog per Platform</h3>
+                            <h3 id="backlog-chart-title" class="text-lg font-medium text-gray-800 dark:text-gray-300">Grafik Backlog per Store Name</h3>
                             <div class="flex space-x-2">
-                                <button id="filter-platform" class="px-3 py-1 bg-indigo-500 text-white text-xs rounded-md shadow-md hover:bg-indigo-600 transition-colors">Filter by Platform</button>
-                                <button id="filter-source" class="px-3 py-1 bg-gray-300 text-gray-800 text-xs rounded-md shadow-md hover:bg-gray-400 transition-colors">Filter by Source</button>
+                                <button id="filter-platform" class="px-3 py-1 bg-indigo-500 text-white text-xs rounded-md shadow-md hover:bg-indigo-600 transition-colors">Filter by Store Name</button>
+                                <button id="filter-source" class="px-3 py-1 bg-gray-300 text-gray-800 text-xs rounded-md shadow-md hover:bg-gray-400 transition-colors">Filter by Marketplace Store</button>
                             </div>
                         </div>
                         <div class="flex space-x-2 mt-2">
@@ -307,10 +317,10 @@
                         <div id="pack-input-container" class="flex space-x-2 min-w-[1200px]">
                             <!-- Input fields akan digenerate oleh JavaScript -->
                         </div>
-                        <div class="mt-8 h-80">
-                            <h3 class="text-lg font-medium text-gray-800 mb-4">Grafik Total Packed</h3>
-                            <canvas id="pack-chart"></canvas>
-                        </div>
+                    </div>
+                    <div class="mt-8 h-80">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4">Grafik Total Packed</h3>
+                        <canvas id="pack-chart"></canvas>
                     </div>
                 </div>
             </div>
@@ -349,6 +359,9 @@
     <div id="toast-container"></div>
     
     <script>
+        // Memindahkan deklarasi fungsi ke cakupan global
+        // agar dapat diakses oleh event listener 'onclick'
+        
         // Inisialisasi state awal
         let pickData = [];
         let packData = [];
@@ -364,7 +377,7 @@
         let packChartInstance;
         let shippedChartInstance;
         let backlogChartInstance; // New chart instance for backlog
-    
+
         // Fungsi untuk membuat array jam dari 00:00 sampai 24:00
         const generateHours = () => {
             const hours = [];
@@ -413,7 +426,6 @@
             { platform: "Woshday Official Store", payment_order: "0", source: "Shopee Official Store" }
         ];
     
-        // Fungsi untuk menampilkan notifikasi toast
         const showToast = (message, type) => {
             const toastContainer = document.getElementById('toast-container');
             if (!toastContainer) {
@@ -428,8 +440,194 @@
                 toast.remove();
             }, 4000);
         };
+        
+        const exportCSV = (type) => {
+            let data, filename, headers;
+            if (type === 'pick') {
+                data = originalPickData;
+                filename = 'pick_data.csv';
+                headers = ['Jam', 'Jumlah Order Picked'];
+            } else if (type === 'pack') {
+                data = originalPackData;
+                filename = 'pack_data.csv';
+                headers = ['Jam', 'Jumlah Order Packed'];
+            } else if (type === 'shipped') {
+                data = originalShippedData;
+                filename = 'shipped_data.csv';
+                headers = ['Jam', 'Jumlah Order Shipped'];
+            }
+
+            let csvContent = headers.join(',') + '\n';
+            hours.forEach((hour, index) => {
+                csvContent += `${hour},${data[index]}\n`;
+            });
     
-        // Fungsi untuk memperbarui semua metrik ringkasan
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        };
+
+        const uploadCSV = (type) => {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.csv';
+            fileInput.style.display = 'none';
+    
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) {
+                    showToast('Upload dibatalkan', 'error');
+                    return;
+                }
+    
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const csvData = event.target.result;
+                        const lines = csvData.split('\n');
+                        const newData = Array(hours.length).fill(0);
+                        
+                        lines.slice(1).forEach(line => {
+                            const parts = line.split(',');
+                            if (parts.length === 2) {
+                                const hour = parts[0].trim();
+                                const value = parseInt(parts[1].trim(), 10);
+                                const index = hours.indexOf(hour);
+                                if (index !== -1 && !isNaN(value)) {
+                                    newData[index] = value;
+                                }
+                            }
+                        });
+    
+                        if (type === 'pick') {
+                            originalPickData = [...newData];
+                            pickData = [...originalPickData];
+                            updateInputFieldsValues('pick', pickData);
+                        } else if (type === 'pack') {
+                            originalPackData = [...newData];
+                            packData = [...originalPackData];
+                            updateInputFieldsValues('pack', packData);
+                        } else if (type === 'shipped') {
+                            originalShippedData = [...newData];
+                            shippedData = [...originalShippedData];
+                            updateInputFieldsValues('shipped', shippedData);
+                        }
+                        updateDashboard();
+                        showToast('Upload CSV berhasil!', 'success');
+                    } catch (error) {
+                        showToast('Gagal memproses file CSV.', 'error');
+                        console.error('Error processing CSV:', error);
+                    }
+                };
+                reader.onerror = function() {
+                    showToast('Gagal membaca file.', 'error');
+                };
+                reader.readAsText(file);
+            });
+    
+            document.body.appendChild(fileInput);
+            fileInput.click();
+            document.body.removeChild(fileInput);
+        };
+
+        const exportBacklogCSV = () => {
+            const filename = 'backlog_data.csv';
+            const headers = ['Store Name', 'Payment Order', 'Marketplace Store'];
+            let csvContent = headers.join(',') + '\n';
+            backlogData.forEach(item => {
+                csvContent += `${item.platform},${item.payment_order},${item.source}\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        };
+
+    
+        const uploadBacklogCSV = () => {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.csv';
+            fileInput.style.display = 'none';
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) {
+                    showToast('Upload dibatalkan', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const csvData = event.target.result;
+                        const lines = csvData.split('\n');
+                        const newBacklogData = [];
+                        
+                        lines.slice(1).forEach(line => {
+                            const parts = line.split(',');
+                            if (parts.length >= 3) { // Allow for missing Payment Order column in CSV
+                                newBacklogData.push({
+                                    platform: parts[0].trim(),
+                                    // Use '0' if the payment_order column is empty or missing
+                                    payment_order: (parts[1].trim() && !isNaN(parseInt(parts[1].trim(), 10))) ? parts[1].trim() : "0", 
+                                    source: parts[2].trim()
+                                });
+                            }
+                        });
+                        backlogData = [...newBacklogData];
+                        updateDashboard();
+                        showToast('Upload CSV Backlog berhasil!', 'success');
+                    } catch (error) {
+                        showToast('Gagal memproses file CSV.', 'error');
+                        console.error('Error processing CSV:', error);
+                    }
+                };
+                reader.onerror = function() {
+                    showToast('Gagal membaca file.', 'error');
+                };
+                reader.readAsText(file);
+            });
+            document.body.appendChild(fileInput);
+            fileInput.click();
+            document.body.removeChild(fileInput);
+        };
+
+        const updateInputFieldsValues = (type, data) => {
+            let containerId;
+            if (type === 'pick') {
+                containerId = 'pick-input-container';
+            } else if (type === 'pack') {
+                containerId = 'pack-input-container';
+            } else if (type === 'shipped') {
+                containerId = 'shipped-input-container';
+            }
+    
+            const container = document.getElementById(containerId);
+            if (container) {
+                const inputs = container.querySelectorAll('input');
+                inputs.forEach((input, index) => {
+                    input.value = data[index] || 0;
+                });
+            }
+        };
+
         const updateSummary = () => {
             const totalPickOrder = pickData.reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0);
             const totalPackOrder = packData.reduce((sum, value) => sum + (parseInt(value, 10) || 0), 0);
@@ -443,7 +641,6 @@
             const nonZeroPackValues = packData.filter(v => v > 0);
             const nonZeroShippedValues = shippedData.filter(v => v > 0);
     
-            // Perhitungan rata-rata per jam
             const averagePickPerHour = nonZeroPickValues.length > 0
                 ? Math.round(totalPickOrder / nonZeroPickValues.length)
                 : '0';
@@ -456,10 +653,8 @@
                 ? Math.round(totalShippedOrder / nonZeroShippedValues.length)
                 : '0';
     
-    
             const inProgressOrders = totalPickOrder - totalPackOrder;
             
-            // Logika Performance
             const targetPick = 650;
             const targetPack = 525;
             const targetShipped = 515;
@@ -485,7 +680,6 @@
                 performanceShipped: performanceShipped.toFixed(2),
             };
     
-            // Render nilai-nilai baru ke DOM
             if(document.getElementById('total-pick-order')) document.getElementById('total-pick-order').innerText = summary.totalPickOrder;
             if(document.getElementById('total-packed-orders')) document.getElementById('total-packed-orders').innerText = summary.totalPacked;
             if(document.getElementById('total-shipped-orders')) document.getElementById('total-shipped-orders').innerText = summary.totalShipped;
@@ -498,13 +692,10 @@
             if(document.getElementById('average-pack-per-hour')) document.getElementById('average-pack-per-hour').innerText = `${summary.averagePackPerHour}`;
             if(document.getElementById('average-shipped-per-hour')) document.getElementById('average-shipped-per-hour').innerText = `${summary.averageShippedPerHour}`;
             
-    
-            // Update warna indikator performa
             const updatePerformanceColor = (elementId, percentage) => {
                 const card = document.getElementById(elementId);
                 if (card) {
                     card.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-red-500', 'bg-gray-400');
-                    // Add a neutral color if the performance is 0
                     if (percentage === 0) {
                         card.classList.add('bg-gray-400');
                     } else if (percentage >= 100) {
@@ -522,12 +713,9 @@
             updatePerformanceColor('card-performance-shipped', parseFloat(summary.performanceShipped));
         };
     
-        // Fungsi untuk merender grafik
         const renderCharts = () => {
-            // Register plugin for datalabels
             Chart.register(ChartDataLabels);
     
-            // Mempersiapkan data untuk grafik Pick Lead Time
             const pickContent = document.getElementById('pick-content');
             let startPickHour = 0;
             let endPickHour = 24;
@@ -563,7 +751,7 @@
                         datalabels: {
                             anchor: 'end',
                             align: 'top',
-                            formatter: (value) => value > 0 ? value : '', // Hanya tampilkan jika nilai > 0
+                            formatter: (value) => value > 0 ? value : '',
                             color: '#4A5568',
                             font: {
                                 weight: 'bold'
@@ -573,7 +761,6 @@
                 }
             });
             
-            // Mempersiapkan data untuk grafik Pack Lead Time
             const packContent = document.getElementById('pack-content');
             let startPackHour = 0;
             let endPackHour = 24;
@@ -609,7 +796,7 @@
                         datalabels: {
                             anchor: 'end',
                             align: 'top',
-                            formatter: (value) => value > 0 ? value : '', // Hanya tampilkan jika nilai > 0
+                            formatter: (value) => value > 0 ? value : '',
                             color: '#4A5568',
                             font: {
                                 weight: 'bold'
@@ -619,7 +806,6 @@
                 }
             });
     
-            // Mempersiapkan data untuk grafik Shipped
             const shippedContent = document.getElementById('shipped-content');
             let startShippedHour = 0;
             let endShippedHour = 24;
@@ -655,7 +841,7 @@
                         datalabels: {
                             anchor: 'end',
                             align: 'top',
-                            formatter: (value) => value > 0 ? value : '', // Hanya tampilkan jika nilai > 0
+                            formatter: (value) => value > 0 ? value : '',
                             color: '#4A5568',
                             font: {
                                 weight: 'bold'
@@ -665,13 +851,11 @@
                 }
             });
 
-            // Merender grafik backlog
             const backlogChartTitle = document.getElementById('backlog-chart-title');
             let backlogLabels = [];
             let backlogValues = [];
             let chartLabel = '';
-
-            // Logic for filtering by platform or source
+            
             const dataToFilter = currentBacklogFilter === 'platform' ? 'platform' : 'source';
             const groupedData = {};
 
@@ -683,8 +867,8 @@
                 });
                 backlogLabels = Object.keys(groupedData);
                 backlogValues = Object.values(groupedData);
-                chartLabel = 'Jumlah Store per ' + (currentBacklogFilter === 'platform' ? 'Platform' : 'Source');
-                backlogChartTitle.innerText = 'Grafik Store per ' + (currentBacklogFilter === 'platform' ? 'Platform' : 'Source');
+                chartLabel = 'Count of Store';
+                backlogChartTitle.innerText = 'Grafik Backlog per Store Name';
             } else if (currentBacklogDataMode === 'payment') {
                 backlogData.forEach(item => {
                     const key = item[dataToFilter];
@@ -693,8 +877,8 @@
                 });
                 backlogLabels = Object.keys(groupedData);
                 backlogValues = Object.values(groupedData);
-                chartLabel = 'Total Payment Orders per ' + (currentBacklogFilter === 'platform' ? 'Platform' : 'Source');
-                backlogChartTitle.innerText = 'Grafik Payment Order per ' + (currentBacklogFilter === 'platform' ? 'Platform' : 'Source');
+                chartLabel = 'Total Payment Orders';
+                backlogChartTitle.innerText = 'Grafik Payment Order per Store Name';
             }
             
             if (backlogChartInstance) backlogChartInstance.destroy();
@@ -733,19 +917,17 @@
             });
         };
     
-        // Fungsi utama yang mengupdate dashboard
         const updateDashboard = () => {
             updateSummary();
             renderBacklogTable();
             renderCharts();
         };
     
-        // Fungsi untuk membuat input fields secara dinamis
         const createInputFields = () => {
             const pickInputContainer = document.getElementById('pick-input-container');
             const packInputContainer = document.getElementById('pack-input-container');
             const shippedInputContainer = document.getElementById('shipped-input-container');
-    
+            
             if (pickInputContainer) {
               hours.forEach((hour, index) => {
                   const pickInputDiv = document.createElement('div');
@@ -830,198 +1012,6 @@
                 tableBody.appendChild(row);
             });
         };
-    
-        // Fungsi untuk export data ke CSV
-        const exportCSV = (type) => {
-            let data, filename, headers;
-            if (type === 'pick') {
-                data = originalPickData;
-                filename = 'pick_data.csv';
-                headers = ['Jam', 'Jumlah Order Picked'];
-            } else if (type === 'pack') {
-                data = originalPackData;
-                filename = 'pack_data.csv';
-                headers = ['Jam', 'Jumlah Order Packed'];
-            } else if (type === 'shipped') {
-                data = originalShippedData;
-                filename = 'shipped_data.csv';
-                headers = ['Jam', 'Jumlah Order Shipped'];
-            }
-
-            let csvContent = headers.join(',') + '\n';
-            hours.forEach((hour, index) => {
-                csvContent += `${hour},${data[index]}\n`;
-            });
-    
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            if (link.download !== undefined) {
-                const url = URL.createObjectURL(blob);
-                link.setAttribute('href', url);
-                link.setAttribute('download', filename);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-        };
-
-        // Fungsi untuk export data backlog ke CSV
-        const exportBacklogCSV = () => {
-            const filename = 'backlog_data.csv';
-            const headers = ['Platform', 'Payment_Order', 'Source'];
-            let csvContent = headers.join(',') + '\n';
-            backlogData.forEach(item => {
-                csvContent += `${item.platform},${item.payment_order},${item.source}\n`;
-            });
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            if (link.download !== undefined) {
-                const url = URL.createObjectURL(blob);
-                link.setAttribute('href', url);
-                link.setAttribute('download', filename);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-        };
-
-    
-        // Fungsi untuk upload CSV
-        const uploadCSV = (type) => {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = '.csv';
-            fileInput.style.display = 'none';
-    
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (!file) {
-                    showToast('Upload dibatalkan', 'error');
-                    return;
-                }
-    
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    try {
-                        const csvData = event.target.result;
-                        const lines = csvData.split('\n');
-                        const newData = Array(hours.length).fill(0);
-                        
-                        lines.slice(1).forEach(line => {
-                            const parts = line.split(',');
-                            if (parts.length === 2) {
-                                const hour = parts[0].trim();
-                                const value = parseInt(parts[1].trim(), 10);
-                                const index = hours.indexOf(hour);
-                                if (index !== -1 && !isNaN(value)) {
-                                    newData[index] = value;
-                                }
-                            }
-                        });
-    
-                        if (type === 'pick') {
-                            originalPickData = [...newData];
-                            pickData = [...originalPickData];
-                            updateInputFieldsValues('pick', pickData);
-                        } else if (type === 'pack') {
-                            originalPackData = [...newData];
-                            packData = [...originalPackData];
-                            updateInputFieldsValues('pack', packData);
-                        } else if (type === 'shipped') {
-                            originalShippedData = [...newData];
-                            shippedData = [...originalShippedData];
-                            updateInputFieldsValues('shipped', shippedData);
-                        }
-                        updateDashboard();
-                        showToast('Upload CSV berhasil!', 'success');
-                    } catch (error) {
-                        showToast('Gagal memproses file CSV.', 'error');
-                        console.error('Error processing CSV:', error);
-                    }
-                };
-                reader.onerror = function() {
-                    showToast('Gagal membaca file.', 'error');
-                };
-                reader.readAsText(file);
-            });
-    
-            document.body.appendChild(fileInput);
-            fileInput.click();
-            document.body.removeChild(fileInput);
-        };
-
-        // Fungsi untuk upload CSV backlog
-        const uploadBacklogCSV = () => {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = '.csv';
-            fileInput.style.display = 'none';
-
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (!file) {
-                    showToast('Upload dibatalkan', 'error');
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    try {
-                        const csvData = event.target.result;
-                        const lines = csvData.split('\n');
-                        const newBacklogData = [];
-                        
-                        lines.slice(1).forEach(line => {
-                            const parts = line.split(',');
-                            if (parts.length >= 3) { // Allow for missing Payment Order column in CSV
-                                newBacklogData.push({
-                                    platform: parts[0].trim(),
-                                    // Use '0' if the payment_order column is empty or missing
-                                    payment_order: (parts[1].trim() && !isNaN(parseInt(parts[1].trim(), 10))) ? parts[1].trim() : "0", 
-                                    source: parts[2].trim()
-                                });
-                            }
-                        });
-                        backlogData = [...newBacklogData];
-                        updateDashboard();
-                        showToast('Upload CSV Backlog berhasil!', 'success');
-                    } catch (error) {
-                        showToast('Gagal memproses file CSV.', 'error');
-                        console.error('Error processing CSV:', error);
-                    }
-                };
-                reader.onerror = function() {
-                    showToast('Gagal membaca file.', 'error');
-                };
-                reader.readAsText(file);
-            });
-            document.body.appendChild(fileInput);
-            fileInput.click();
-            document.body.removeChild(fileInput);
-        };
-    
-        const updateInputFieldsValues = (type, data) => {
-            let containerId;
-            if (type === 'pick') {
-                containerId = 'pick-input-container';
-            } else if (type === 'pack') {
-                containerId = 'pack-input-container';
-            } else if (type === 'shipped') {
-                containerId = 'shipped-input-container';
-            }
-    
-            const container = document.getElementById(containerId);
-            if (container) {
-                const inputs = container.querySelectorAll('input');
-                inputs.forEach((input, index) => {
-                    input.value = data[index] || 0;
-                });
-            }
-        };
-    
     
         // Jalankan inisialisasi saat halaman dimuat
         window.onload = () => {
